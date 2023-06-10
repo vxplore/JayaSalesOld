@@ -58,16 +58,13 @@ class ConnectivityListener(private val context: Context) {
         val activeNetwork = getConnectivityManager()?.activeNetworkInfo
         val isConnected = activeNetwork?.isConnectedOrConnecting == true
 
-        if(isConnected)
-        {
+        return if(isConnected) {
             val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val isMetered = cm.isActiveNetworkMetered()
+            val isMetered = cm.isActiveNetworkMetered
 
-            return Net(isConnected,isMetered)
-        }
-        else
-        {
-            return Net(false, metered = true)
+            Net(isConnected,isMetered)
+        } else {
+            Net(false, metered = true)
         }
 
 

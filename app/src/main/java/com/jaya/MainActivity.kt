@@ -1,5 +1,6 @@
 package com.jaya
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -14,6 +15,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowManager
 import android.webkit.*
 import android.widget.Button
 import android.widget.ImageView
@@ -41,10 +43,11 @@ class MainActivity : AppCompatActivity() {
     var net = MyApplication.net
     var netObserver = Observer<ConnectivityListener.Net> { t ->
         if(t.on){
-            wv_custom?.loadInitial()
+            wv_custom?.loadInitial(preferredUrl = "https://v-xplore.com/dev/jaya/backend")
             snackbar("You are live")
         }
         else{
+            wv_custom?.loadInitial(preferredUrl = "file:///android_asset/scratch.html")
             snackbar("You are offline")
         }
     }
@@ -59,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         if(savedInstanceState==null){
             observeNetState()
         }
+        changeStatusBarColor(color = 0xFFFFEB56)
         setContentView(R.layout.activity_main)
         findViews()
     }
@@ -157,10 +161,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(wv_custom?.canGoBack()==true){
+        if (wv_custom?.canGoBack() == true && net.value?.on == true) {
             wv_custom?.goBack()
-        }
-        else{
+        } else {
             super.onBackPressed()
         }
     }
@@ -239,4 +242,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+}
+
+
+fun Activity.changeStatusBarColor(color: Long) {
+    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+    window.statusBarColor = color.toInt()
 }

@@ -185,8 +185,9 @@ class CustomWebView : WebView {
         }
     }
 
-    fun loadInitial(){
-        loadUrl(currentUrl)
+    fun loadInitial(preferredUrl: String? = null){
+        Log.d("testing", "loadInitial: called $currentUrl")
+        loadUrl(preferredUrl ?: currentUrl)
     }
 
     override fun onSaveInstanceState(): Parcelable? {
